@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Code Rain</title>
+	<style type="text/css">
+		@font-face {
+			font-family: matrix;
+			src: url("http://zeroomega.info/matrix/matrix.ttf");	/* thanks :-) */
+		}
+
+		body {
+			background: #0f0f0f;
+			color: #04ee0f;
+			font-family: matrix, 'consolas', 'courier new', 'courier', monospace;
+			font-size: 20px;
+			text-align: center;
+			overflow: hidden
+		}
+
+		div.cloud {
+			width: 20px;
+			float: left;
+		}
+
+		div {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+		var s = window.screen;
+		var xCount = s.width / 10;
+		var yCount = s.height / 15;
+		var code = 'abcdefghijklmnopqrstuvwxyzABCDFGHJKMNQRSTWXZ~!@#$%^&*_'.split('');
+		// var code = '1234567890'.split('');
+		var clouds = [];
+
+		function addDroplet(cloud) {
+			var fAlpha;
+			if(cloud.firstElementChild) {
+				fAlpha = cloud.firstElementChild.alpha;
+				if(fAlpha < 0.5 && Math.random() > 0.98) {
+					fAlpha = 1;
+				} else {
+					fAlpha -= 0.05;
+					fAlpha = fAlpha < 0 ? 0 : fAlpha;
+				}
+			}
+			else
+				fAlpha = 1;
+			var newDiv = document.createElement('div');
+				newDiv.innerText = code[Math.floor(Math.random() * code.length)];
+				newDiv.style.color = 'rgba(4, 221, 4, ' + fAlpha + ')';
+				newDiv.alpha = fAlpha;
+				newDiv.class = 'node';
+			cloud.insertBefore(newDiv, cloud.firstElementChild);
+		}
+
+		function createClouds() {
+			var newCloud;
+			for(var i = 0; i < xCount; ++i) {
+				newCloud = document.createElement('div');
+				newCloud.async = true;
+				newCloud.className = 'cloud';
+				for (var j = 0; j < yCount; ++j) {
+					addDroplet(newCloud);
+				}
+				document.body.appendChild(newCloud);
+				clouds.push(newCloud);
+			}
+		}
+
+		function dropRain() {
+			for(var i = 0; i < clouds.length; ++i) {
+				addDroplet(clouds[i]);
+				clouds[i].removeChild(clouds[i].lastElementChild);
+			}
+		}
+
+		createClouds();
+		setInterval(dropRain, 33);
+	</script>
+</body>
+</html>
